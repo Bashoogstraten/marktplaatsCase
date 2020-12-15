@@ -1,6 +1,9 @@
 package org.example.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.resources.GebruikerStatus;
 
 import javax.persistence.*;
@@ -16,7 +19,9 @@ import static javax.persistence.CascadeType.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@NamedQuery(name = "Gebruiker.findAll", query = "select c from Gebruiker c")
+@NamedQueries({@NamedQuery(name = "Gebruiker.findAll", query = "select c from Gebruiker c"),
+        @NamedQuery(name = "Gebruiker.findAllBasic", query = "select new org.example.domain.GebruikerDto(c.id, c.gebruikersnaam, c.email, c.wachtwoord) from Gebruiker c")})
+
 public class Gebruiker {
 
     @Id

@@ -2,6 +2,8 @@ package org.example.resources;
 
 import org.example.domain.Gebruiker;
 import org.example.domain.GebruikerDao;
+import org.example.domain.GebruikerDto;
+import org.example.utils.PasswordUtils;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -19,6 +21,12 @@ public class GebruikersResource implements JsonResource {
         return q == null ? dao.getAll() : dao.get(q);
     }
 
+    @GET @Path("basic")
+    public Collection<GebruikerDto> getAllBasic() {
+
+        return dao.getAllBasic();
+    }
+
     @POST
     public Gebruiker post(Gebruiker c) {
         if (dao.add(c)) {
@@ -26,6 +34,19 @@ public class GebruikersResource implements JsonResource {
         } else {
             throw new RuntimeException("Post contact " + c + " failed.");
         }
+    }
+
+    @POST @Path("login")
+    public GebruikerDto login(GebruikerDto c) {
+        String hashedWachtwoord = PasswordUtils.digestPassword(c.getWachtwoord());
+        GebruikerDto e = dao.getMetGebruikersnaam(c.getGebruikersnaam());
+
+        if (hashedWachtwoord.equals(e.getWachtwoord())) {
+            return e;
+        } else {
+            throw new RuntimeException("Login contact " + c + "failed.");
+        }
+
     }
 
     @DELETE

@@ -4570,12 +4570,16 @@ SELECT|sys.sys_config:null
       <Position>4</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <key id="1118" parent="370" name="PRIMARY">
+    <column id="1118" parent="370" name="email">
+      <Position>5</Position>
+      <DataType>varchar(255)|0s</DataType>
+    </column>
+    <key id="1119" parent="370" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="1119" parent="371" name="next_val">
+    <column id="1120" parent="371" name="next_val">
       <Position>1</Position>
       <DataType>bigint|0s</DataType>
     </column>

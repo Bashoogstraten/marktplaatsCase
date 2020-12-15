@@ -1,21 +1,29 @@
 package org.example.domain;
 
+import org.example.resources.GebruikerStatus;
+import org.example.utils.PasswordUtils;
+import sun.security.util.Password;
+
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.Collection;
 import java.util.List;
 
-// @Alternative
-// @Default
 @Stateless
 public class GebruikerDao {
 
-    @PersistenceContext // Container managed persistence context
+    @PersistenceContext
     private EntityManager em;
 
     public List<Gebruiker> getAll() {
         return em.createNamedQuery("Gebruiker.findAll", Gebruiker.class).getResultList();
+    }
+
+    public List<GebruikerDto> getAllBasic() {
+        return em.createNamedQuery("Gebruiker.findAllBasic", GebruikerDto.class).getResultList();
     }
 
     public Gebruiker getById(String id) { return null; }
@@ -24,7 +32,17 @@ public class GebruikerDao {
         return null;
     }
 
+    public GebruikerDto getMetGebruikersnaam(String username) {
+        TypedQuery<GebruikerDto> query = em.createQuery("SELECT new org.example.domain.GebruikerDto(e.gebruikersnaam, e.email, e.wachtwoord) FROM Gebruiker e WHERE e.gebruikersnaam = :un", GebruikerDto.class);
+        query.setParameter("un", username);
+        return query.getSingleResult();
+
+    }
+
     public boolean add(Gebruiker c) {
+        c.setStatus(GebruikerStatus.ACTIEF);
+        String unhashed = c.getWachtwoord();
+        c.setWachtwoord(PasswordUtils.digestPassword(unhashed));
         em.persist(c);
         return true;
     }
