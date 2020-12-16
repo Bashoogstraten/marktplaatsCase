@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @Entity
 @NamedQueries({@NamedQuery(name = "Advertentie.findAll", query = "select c from Advertentie c"),
         @NamedQuery(name = "Advertentie.findAllBasic", query = "select new org.example.domain.AdvertentieDto(c.id, c.titel, c.omschrijving, c.prijs) from Advertentie c"),
-@NamedQuery(name = "Advertentie.findBySearchterm", query = "select new org.example.domain.AdvertentieDto(c.id, c.titel, c.omschrijving, c.prijs) from Advertentie c where c.titel = :titel"),
+@NamedQuery(name = "Advertentie.findBySearchterm", query = "select new org.example.domain.AdvertentieDto(c.id, c.titel, c.omschrijving, c.prijs) from Advertentie c where c.titel like :titel or c.omschrijving like :titel"),
 @NamedQuery(name = "Advertentie.findBasicGebruiker", query = "select new org.example.domain.AdvertentieDto(c.id, c.titel, c.omschrijving, c.prijs) from Advertentie c join c.aanbieder g where g.id = :gb")})
 public class Advertentie {
 

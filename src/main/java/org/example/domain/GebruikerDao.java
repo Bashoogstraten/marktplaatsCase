@@ -26,14 +26,23 @@ public class GebruikerDao {
         return em.createNamedQuery("Gebruiker.findAllBasic", GebruikerDto.class).getResultList();
     }
 
-    public Gebruiker getById(String id) { return null; }
+    public Gebruiker getById(long id) {
+        TypedQuery<Gebruiker> query = em.createQuery(
+                "SELECT e FROM Gebruiker e WHERE e.id = :un", Gebruiker.class);
+        query.setParameter("un", id);
+        return query.getSingleResult();
+    }
 
     public Collection<Gebruiker> get(String q) {
         return null;
     }
 
     public GebruikerDto getMetGebruikersnaam(String username) {
-        TypedQuery<GebruikerDto> query = em.createQuery("SELECT new org.example.domain.GebruikerDto(e.gebruikersnaam, e.email, e.wachtwoord) FROM Gebruiker e WHERE e.gebruikersnaam = :un", GebruikerDto.class);
+        TypedQuery<GebruikerDto> query = em.createQuery(
+                "SELECT new org.example.domain.GebruikerDto(e.id, e.gebruikersnaam, e.email, e.wachtwoord) " +
+                        "FROM Gebruiker e " +
+                        "WHERE e.gebruikersnaam = :un",
+                GebruikerDto.class);
         query.setParameter("un", username);
         return query.getSingleResult();
 

@@ -24,15 +24,17 @@ public class AdvertentiesResource implements JsonResource {
         return q == null ? dao.getAllBasic() : dao.getBasic(q);
     }
 
-    @GET @Path("basic/{id}")
+    @GET
+    @Path("basic/{id}")
     public Collection<AdvertentieDto> getAllGebruiker(@PathParam("id") long id) {
 
         return dao.getBasicGebruiker(id);
     }
 
     @POST
-    public Advertentie post(Advertentie a) {
-        if (dao.add(a)) {
+    @Path("basic/{id}")
+    public Advertentie post(@PathParam("id") long id, Advertentie a) {
+        if (dao.add(id, a)) {
             return a;
         } else {
             throw new RuntimeException("Post contact " + a + " failed.");

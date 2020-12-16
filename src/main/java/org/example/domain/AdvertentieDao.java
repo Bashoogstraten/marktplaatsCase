@@ -3,6 +3,7 @@ package org.example.domain;
 import org.example.resources.AdvertentieStatus;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -14,6 +15,9 @@ public class AdvertentieDao {
 
     @PersistenceContext
     private EntityManager em;
+
+    @Inject
+    private GebruikerDao gebDao;
 
     public List<Advertentie> getAll() {
         return em.createNamedQuery("Advertentie.findAll", Advertentie.class).getResultList();
@@ -34,7 +38,7 @@ public class AdvertentieDao {
     public List<AdvertentieDto> getBasic(String zoekterm) {
 
         TypedQuery<AdvertentieDto> namedQuery = em.createNamedQuery("Advertentie.findBySearchterm", AdvertentieDto.class);
-        namedQuery.setParameter("titel", zoekterm);
+        namedQuery.setParameter("titel", "%" + zoekterm + "%");
 //        namedQuery.setParameter("omschrijving", "'%" + zoekterm + "%'");
         return namedQuery.getResultList();
     }
@@ -47,8 +51,9 @@ public class AdvertentieDao {
 
     }
 
-    public boolean add(Advertentie a) {
+    public boolean add(long id, Advertentie a) {
         a.setAdvertentieStatus(AdvertentieStatus.BESCHIKBAAR);
+        a.setAanbieder(gebDao.getById(id));
         em.persist(a);
         return true;
     }
